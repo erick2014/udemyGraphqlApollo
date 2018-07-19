@@ -12,6 +12,8 @@ const {
     GraphQLNonNull
 } = graphql
 
+const baseServerUrl = `http://localhost:3000`
+
 // company entity
 const CompanyType = new GraphQLObjectType({
     name: 'Company',
@@ -87,7 +89,7 @@ const rootMutation = new GraphQLObjectType({
                 companyId: { type: GraphQLString }
             },
             resolve(parentValue, { firstName, age }) { // destruct firstName, age from args parameter
-                return axios.post(`http://localhost:3000/users`, { firstName, age })
+                return axios.post(`${baseServerUrl}/users`, { firstName, age })
                     .then(res => res.data)
             }
         },
@@ -98,8 +100,9 @@ const rootMutation = new GraphQLObjectType({
                 userId: { type: new GraphQLNonNull(GraphQLString) },
             },
             resolve(parentValue, { userId }) {
-                return axios.delete(`http://localhost:3000/users/${userId}`)
-                    .then(res => { return {} })
+                return axios.delete(`${baseServerUrl}/users/${userId}`)
+                    .then(res => { return { id: userId } })
+                    .catch(res => null)
             }
         }
     }
