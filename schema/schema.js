@@ -88,7 +88,18 @@ const rootMutation = new GraphQLObjectType({
             },
             resolve(parentValue, { firstName, age }) { // destruct firstName, age from args parameter
                 return axios.post(`http://localhost:3000/users`, { firstName, age })
-                    .then(res => { console.log("res ", res.data); return res.data })
+                    .then(res => res.data)
+            }
+        },
+        deleteUser: {
+            type: UserType,
+            args: {
+                // not null means, the field is mandatory
+                userId: { type: new GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parentValue, { userId }) {
+                return axios.delete(`http://localhost:3000/users/${userId}`)
+                    .then(res => { return {} })
             }
         }
     }
