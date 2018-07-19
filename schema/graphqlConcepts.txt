@@ -1,0 +1,1 @@
+root query: is something that allows me to jump into our graph of data, entry point into our data, jump and land on a very specific node in the graph of all our data
