@@ -1,1 +1,28 @@
-root query: is something that allows me to jump into our graph of data, entry point into our data, jump and land on a very specific node in the graph of all our data
+root query: 
+is something that allows me to jump into our graph of data, entry point into our data, jump and land on a very specific node in the graph of all our data
+
+fragments( more frecuently used in client side): 
+Are a way to reuse properties in queries, this is to avoid repeating the same 
+properties in queries.
+
+query{
+    apple:company(id:"1"){
+        ...companyDetails
+    }
+    google:company(id:"1"){
+        ...companyDetails
+    }
+}
+
+fragment companyDetails on Company{
+    id
+    name
+    description
+}
+
+GraphQL Schema consists on:
+query -> root query -> UserType
+query -> root query -> companyType
+
+mutation -> mutations-> addUser
+mutation -> mutations-> deleteUser
