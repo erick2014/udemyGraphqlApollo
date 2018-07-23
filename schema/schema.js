@@ -42,7 +42,7 @@ const UserType = new GraphQLObjectType({
         company: {
             type: CompanyType,
             resolve(parentValue, args) {
-                return axios.get(`http://localhost:3000/companies/${parentValue.companyId}`)
+                return axios.get(`${baseServerUrl}/companies/${parentValue.companyId}`)
                     .then(response => response.data)
                     .catch(err => null)
             }
@@ -59,7 +59,7 @@ const RootQuery = new GraphQLObjectType({
             args: { id: { type: GraphQLString } },
             resolve(parentValue, args) {
                 // third party server
-                return axios.get(`http://localhost:3000/users/${args.id}`)
+                return axios.get(`${baseServerUrl}/users/${args.id}`)
                     .then(response => response.data)
                     .catch(err => null)
             }
@@ -69,7 +69,7 @@ const RootQuery = new GraphQLObjectType({
             args: { id: { type: GraphQLString } },
             resolve(parentValue, args) {
                 // third party server
-                return axios.get(`http://localhost:3000/companies/${args.id}`)
+                return axios.get(`${baseServerUrl}/companies/${args.id}`)
                     .then(response => response.data)
                     .catch(err => null)
             }
@@ -88,8 +88,8 @@ const rootMutation = new GraphQLObjectType({
                 age: { type: new GraphQLNonNull(GraphQLInt) },
                 companyId: { type: GraphQLString }
             },
-            resolve(parentValue, { firstName, age }) { // destruct firstName, age from args parameter
-                return axios.post(`${baseServerUrl}/users`, { firstName, age })
+            resolve(parentValue, { firstName, age, companyId }) { // destruct firstName, age from args parameter
+                return axios.post(`${baseServerUrl}/users`, { firstName, age, companyId })
                     .then(res => res.data)
             }
         },
@@ -102,7 +102,23 @@ const rootMutation = new GraphQLObjectType({
             resolve(parentValue, { userId }) {
                 return axios.delete(`${baseServerUrl}/users/${userId}`)
                     .then(res => { return { id: userId } })
+                    .catch(r0es => null)
+            }
+        },
+        editUser: {
+            type: UserType,
+            args: {
+                // not null means, the field is mandatory
+                id: { type: new GraphQLNonNull(GraphQLString) },
+                firstName: { type: GraphQLString },
+                age: { type: GraphQLInt },
+                companyId: { type: GraphQLString }
+            },
+            resolve(parentValue, { id, firstName, age, companyId }) {
+                return axios.patch(`${baseServerUrl}/users/${id}`, { firstName, age, companyId })
+                    .then(res => res.data)
                     .catch(res => null)
+
             }
         }
     }
